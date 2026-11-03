@@ -1,0 +1,249 @@
+@baseUrl = http://localhost:3000
+
+### GET /livros lista todos [200]
+GET {{baseUrl}}/livros
+
+### GET /livros filtra por categoria [200]
+GET {{baseUrl}}/livros?categoria=2
+
+### GET /livros filtra por autor [200]
+GET {{baseUrl}}/livros?autor=1
+
+### GET /livros filtra disponiveis [200]
+GET {{baseUrl}}/livros?disponivel=true
+
+### GET /livros categoria invalida [400 REQUISICAO_INVALIDA]
+GET {{baseUrl}}/livros?categoria=abc
+
+### GET /livros disponivel invalido [400 REQUISICAO_INVALIDA]
+GET {{baseUrl}}/livros?disponivel=talvez
+
+### GET /livros/1 detalhe com autor e categoria [200]
+GET {{baseUrl}}/livros/1
+
+### GET /livros/abc id nao numerico [400 REQUISICAO_INVALIDA]
+GET {{baseUrl}}/livros/abc
+
+### GET /livros/999 inexistente [404 NAO_ENCONTRADO]
+GET {{baseUrl}}/livros/999
+
+### POST /livros cadastra e recebe id 6 [201]
+POST {{baseUrl}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "Memorias Postumas de Bras Cubas",
+  "exemplares": 2,
+  "autorId": 1,
+  "categoriaId": 1
+}
+
+### POST /livros corpo invalido [400 REQUISICAO_INVALIDA]
+POST {{baseUrl}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "",
+  "exemplares": 0
+}
+
+### POST /livros autor inexistente [404 NAO_ENCONTRADO]
+POST {{baseUrl}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "Sem autor",
+  "exemplares": 1,
+  "autorId": 999,
+  "categoriaId": 1
+}
+
+### POST /livros categoria inexistente [404 NAO_ENCONTRADO]
+POST {{baseUrl}}/livros
+Content-Type: application/json
+
+{
+  "titulo": "Sem categoria",
+  "exemplares": 1,
+  "autorId": 1,
+  "categoriaId": 999
+}
+
+### PATCH /livros/6 altera exemplares [200]
+PATCH {{baseUrl}}/livros/6
+Content-Type: application/json
+
+{
+  "exemplares": 4
+}
+
+### PATCH /livros/6 dado invalido [400 REQUISICAO_INVALIDA]
+PATCH {{baseUrl}}/livros/6
+Content-Type: application/json
+
+{
+  "exemplares": "muitos"
+}
+
+### PATCH /livros/999 inexistente [404 NAO_ENCONTRADO]
+PATCH {{baseUrl}}/livros/999
+Content-Type: application/json
+
+{
+  "titulo": "Fantasma"
+}
+
+### DELETE /livros/6 remove [204]
+DELETE {{baseUrl}}/livros/6
+
+### DELETE /livros/999 inexistente [404 NAO_ENCONTRADO]
+DELETE {{baseUrl}}/livros/999
+
+### R6 DELETE /livros/2 com emprestimo em aberto [409 LIVRO_COM_EMPRESTIMO_ABERTO]
+DELETE {{baseUrl}}/livros/2
+
+### GET /autores lista [200]
+GET {{baseUrl}}/autores
+
+### POST /autores cadastra [201]
+POST {{baseUrl}}/autores
+Content-Type: application/json
+
+{
+  "nome": "Lima Barreto"
+}
+
+### POST /autores sem nome [400 REQUISICAO_INVALIDA]
+POST {{baseUrl}}/autores
+Content-Type: application/json
+
+{}
+
+### GET /categorias lista [200]
+GET {{baseUrl}}/categorias
+
+### POST /categorias cadastra [201]
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nome": "Poesia"
+}
+
+### POST /categorias sem nome [400 REQUISICAO_INVALIDA]
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{}
+
+### POST /leitores cadastra e recebe id 4 [201]
+POST {{baseUrl}}/leitores
+Content-Type: application/json
+
+{
+  "nome": "Diego Rocha",
+  "matricula": "20260004",
+  "email": "diego@escola.br"
+}
+
+### POST /leitores email invalido [400 REQUISICAO_INVALIDA]
+POST {{baseUrl}}/leitores
+Content-Type: application/json
+
+{
+  "nome": "Sem email",
+  "matricula": "20260005",
+  "email": "nao-e-email"
+}
+
+### POST /leitores matricula repetida [409 MATRICULA_DUPLICADA]
+POST {{baseUrl}}/leitores
+Content-Type: application/json
+
+{
+  "nome": "Outra Pessoa",
+  "matricula": "20260001",
+  "email": "outra@escola.br"
+}
+
+### GET /leitores/3/emprestimos todos [200]
+GET {{baseUrl}}/leitores/3/emprestimos
+
+### GET /leitores/3/emprestimos somente abertos [200]
+GET {{baseUrl}}/leitores/3/emprestimos?status=aberto
+
+### GET /leitores/3/emprestimos status invalido [400 REQUISICAO_INVALIDA]
+GET {{baseUrl}}/leitores/3/emprestimos?status=perdido
+
+### GET /leitores/999/emprestimos inexistente [404 NAO_ENCONTRADO]
+GET {{baseUrl}}/leitores/999/emprestimos
+
+### R3 POST /emprestimos calcula datas e recebe id 6 [201]
+POST {{baseUrl}}/emprestimos
+Content-Type: application/json
+
+{
+  "livroId": 1,
+  "leitorId": 1
+}
+
+### R3 POST /emprestimos cliente nao envia data prevista [400 REQUISICAO_INVALIDA]
+POST {{baseUrl}}/emprestimos
+Content-Type: application/json
+
+{
+  "livroId": 1,
+  "leitorId": 1,
+  "dataPrevista": "2030-01-01"
+}
+
+### POST /emprestimos livro inexistente [404 NAO_ENCONTRADO]
+POST {{baseUrl}}/emprestimos
+Content-Type: application/json
+
+{
+  "livroId": 999,
+  "leitorId": 1
+}
+
+### POST /emprestimos leitor inexistente [404 NAO_ENCONTRADO]
+POST {{baseUrl}}/emprestimos
+Content-Type: application/json
+
+{
+  "livroId": 1,
+  "leitorId": 999
+}
+
+### R1 POST /emprestimos livro sem exemplar [409 SEM_EXEMPLAR]
+POST {{baseUrl}}/emprestimos
+Content-Type: application/json
+
+{
+  "livroId": 2,
+  "leitorId": 1
+}
+
+### R2 POST /emprestimos leitor no limite de 3 [409 LIMITE_EMPRESTIMOS]
+POST {{baseUrl}}/emprestimos
+Content-Type: application/json
+
+{
+  "livroId": 5,
+  "leitorId": 2
+}
+
+### PATCH /emprestimos/6/devolucao no prazo com multa 0 [200]
+PATCH {{baseUrl}}/emprestimos/6/devolucao
+
+### R4 PATCH /emprestimos/4/devolucao 6 dias de atraso com multa 6 [200]
+PATCH {{baseUrl}}/emprestimos/4/devolucao
+
+### R5 PATCH /emprestimos/5/devolucao ja devolvido [409 JA_DEVOLVIDO]
+PATCH {{baseUrl}}/emprestimos/5/devolucao
+
+### PATCH /emprestimos/999/devolucao inexistente [404 NAO_ENCONTRADO]
+PATCH {{baseUrl}}/emprestimos/999/devolucao
+
+### PATCH /emprestimos/abc/devolucao id nao numerico [400 REQUISICAO_INVALIDA]
+PATCH {{baseUrl}}/emprestimos/abc/devolucao

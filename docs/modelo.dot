@@ -1,0 +1,57 @@
+digraph modelo {
+  graph [rankdir=LR, bgcolor="white", nodesep=0.7, ranksep=1.6, pad=0.4, fontname="Helvetica", fontsize=22, label="Biblioteca escolar: modelo entidade-relacionamento", labelloc=t];
+  node [shape=plain, fontname="Helvetica", fontsize=13];
+  edge [dir=both, arrowtail=tee, arrowhead=crow, color="#334155", fontname="Helvetica-Bold", fontsize=14];
+
+  autores [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" color="#334155">
+      <tr><td bgcolor="#1e3a5f" colspan="3"><font color="white"><b>autores</b></font></td></tr>
+      <tr><td align="left"><b>PK</b></td><td align="left">id</td><td align="left" port="out">int</td></tr>
+      <tr><td></td><td align="left">nome</td><td align="left">varchar(150)</td></tr>
+    </table>>];
+
+  categorias [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" color="#334155">
+      <tr><td bgcolor="#1e3a5f" colspan="3"><font color="white"><b>categorias</b></font></td></tr>
+      <tr><td align="left"><b>PK</b></td><td align="left">id</td><td align="left" port="out">int</td></tr>
+      <tr><td></td><td align="left">nome</td><td align="left">varchar(100)</td></tr>
+    </table>>];
+
+  leitores [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" color="#334155">
+      <tr><td bgcolor="#1e3a5f" colspan="3"><font color="white"><b>leitores</b></font></td></tr>
+      <tr><td align="left"><b>PK</b></td><td align="left">id</td><td align="left" port="out">int</td></tr>
+      <tr><td></td><td align="left">nome</td><td align="left">varchar(150)</td></tr>
+      <tr><td></td><td align="left">matricula (unique)</td><td align="left">varchar(30)</td></tr>
+      <tr><td></td><td align="left">email</td><td align="left">varchar(150)</td></tr>
+    </table>>];
+
+  livros [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" color="#334155">
+      <tr><td bgcolor="#1e3a5f" colspan="3"><font color="white"><b>livros</b></font></td></tr>
+      <tr><td align="left"><b>PK</b></td><td align="left">id</td><td align="left" port="out">int</td></tr>
+      <tr><td></td><td align="left">titulo</td><td align="left">varchar(200)</td></tr>
+      <tr><td></td><td align="left">exemplares</td><td align="left">int</td></tr>
+      <tr><td align="left" port="autor"><b>FK</b></td><td align="left">autor_id</td><td align="left">int</td></tr>
+      <tr><td align="left" port="categoria"><b>FK</b></td><td align="left">categoria_id</td><td align="left">int</td></tr>
+    </table>>];
+
+  emprestimos [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6" color="#334155">
+      <tr><td bgcolor="#1e3a5f" colspan="3"><font color="white"><b>emprestimos</b></font></td></tr>
+      <tr><td align="left"><b>PK</b></td><td align="left">id</td><td align="left">int</td></tr>
+      <tr><td align="left" port="leitor"><b>FK</b></td><td align="left">leitor_id</td><td align="left">int</td></tr>
+      <tr><td align="left" port="livro"><b>FK</b></td><td align="left">livro_id</td><td align="left">int</td></tr>
+      <tr><td></td><td align="left">data_retirada</td><td align="left">date</td></tr>
+      <tr><td></td><td align="left">data_prevista</td><td align="left">date</td></tr>
+      <tr><td></td><td align="left">data_devolucao (null)</td><td align="left">date</td></tr>
+      <tr><td></td><td align="left">multa</td><td align="left">decimal(10,2)</td></tr>
+    </table>>];
+
+  autores:out:e -> livros:autor:w [label=" 1 : N "];
+  categorias:out:e -> livros:categoria:w [label=" 1 : N "];
+  livros:out:e -> emprestimos:livro:w [label=" 1 : N "];
+  leitores:out:e -> emprestimos:leitor:w [label=" 1 : N "];
+
+  { rank=same; autores; categorias; leitores; }
+}
